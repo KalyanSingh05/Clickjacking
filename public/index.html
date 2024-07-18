@@ -79,38 +79,42 @@
             <a href="register.html" >Create an account</a>
         </p>
         <script>
-            document.getElementById('loginForm').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const username = document.getElementById('first').value;
-                const password = document.getElementById('password').value;
+            function addEventListeners() {
+                document.getElementById('loginForm').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const username = document.getElementById('first').value;
+                    const password = document.getElementById('password').value;
 
-                const response = await fetch('http://localhost:5000/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
+                    const response = await fetch('http://localhost:5000/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message);
+                        window.location.href = 'Home.html';
+                    } else {
+                        alert(result.message);
+                    }
                 });
 
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.message);
-                    window.location.href = 'Home.html';
-                } else {
-                    alert(result.message);
-                }
-            });
-
-            document.getElementById('clickjacking').addEventListener('click', function() {
-                alert('OPPS!! Account Deleted!');
-            });
+                document.getElementById('clickjacking').addEventListener('click', function() {
+                    alert('OPPS!! Account Deleted!');
+                });
+            }
 
             window.onload = function() {
+                addEventListeners();
                 const urlParams = new URLSearchParams(window.location.search);
                 const exploitCode = urlParams.get('exploit');
                 if (exploitCode) {
                     alert('Exploit code received: ' + exploitCode);
                     document.body.innerHTML = exploitCode;
+                    addEventListeners();
                 }
             }
         </script>
