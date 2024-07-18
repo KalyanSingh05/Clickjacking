@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickjacking Exploit Lab</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        textarea {
+            width: 80%;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #e76f06;
+            color: rgb(3, 3, 3);
+        }
+        iframe {
+            width: 80%;
+            height: 300px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clickjacking Exploit Lab</h1>
+    <textarea id="exploitCode" placeholder="Write your exploit code here..."></textarea>
+    <button onclick="storeExploit()">Store Exploit</button>
+    <button onclick="runExploit()">Run Exploit</button>
+    <iframe id="targetFrame" src="index.html"></iframe>
+    <script>
+        function storeExploit() {
+            const exploitCode = document.getElementById('exploitCode').value;
+            fetch('/api/exploit/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: exploitCode })
+            }).then(response => response.json())
+              .then(data => {
+                alert('Exploit Stored Successfully!');
+            }).catch(error => {
+                alert('Error storing exploit code: ' + error);
+            });
+        }
+
+        function runExploit() {
+            fetch('/api/exploit/retrieve')
+                .then(response => response.json())
+                .then(data => {
+                    const exploitCode = data.code;
+                    const iframe = document.getElementById('targetFrame');
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc.open();
+                    doc.write(exploitCode);
+                    doc.close();
+                }).catch(error => {
+                    alert('Error retrieving exploit code: ' + error);
+                });
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const exploitCode = urlParams.get('exploit');
+            if (exploitCode) {
+                const iframe = document.getElementById('targetFrame');
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(exploitCode);
+                doc.close();
+            }
+        }
+    </script>
+</body>
+</html>

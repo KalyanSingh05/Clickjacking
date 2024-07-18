@@ -1,0 +1,23 @@
+{
+  "name": "thecyberhub",
+  "version": "1.0.0",
+  "description": "ClickJacking Lab For Ethical Hacking",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  },
+  "author": "kalyan",
+  "license": "ISC"
+}
